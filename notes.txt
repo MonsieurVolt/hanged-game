@@ -1,0 +1,22 @@
+========== composants =========
+V) index => render dans le dom
+V) App => classe, assemblege des components et algorithmes du jeu
+V) ButtonLetters(str, onclick) => creation des lettres ou du boutton ..........restart < div
+FinalWord(str) => affichage du mot
+(pendu => image du pendu)
+
+========== algorithmes =========
+V) pick liste de mots     
+
+========== utils =========
+V) liste de mots
+V) liste de lettre
+restart
+
+======= state =======
+V) mot a trouver
+lettres deja trouvé
+
+
+
+
