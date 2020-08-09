@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ButtonLetters from "./ButtonLetters";
 import WordToFind from "./WordToFind";
+import PrintHanged from "./PrintHanged";
 import "./App.css";
 const wordOf = [
   "VOITURE",
@@ -15,8 +16,8 @@ const wordOf = [
   "HERBE",
   "JARDIN",
   "MAISON",
-  "THOMAS", 
-  "PORTABLE"
+  "THOMAS",
+  "PORTABLE",
 ];
 
 const letters = [
@@ -62,6 +63,23 @@ class App extends Component {
     let result = wordOf[random];
     return result;
   }
+  win() {
+    const { nbTry, lettersFind, finalWord } = this.state;
+    const splitFinalWord = finalWord.split("");
+    let a = new Set(splitFinalWord).size - 1;
+    console.log(lettersFind.length + "et " + a);
+    if (nbTry <= 7 && lettersFind.length === a) {
+      return true;
+    }
+    return false;
+  }
+  loose() {
+    const { nbTry } = this.state;
+    if (nbTry >= 7) {
+      return false;
+    }
+    return true;
+  }
   shouldShowLetter(letter, index) {
     const { lettersFind, finalWord } = this.state;
     if (letter === finalWord[0] || lettersFind.indexOf(letter) !== -1) {
@@ -69,6 +87,14 @@ class App extends Component {
     } else {
       return "_";
     }
+  }
+  restart() {
+    // const { nbTry, lettersFind, finalWord }
+    this.setState({
+      nbTry: 0,
+      finalWord: this.chooseWord(),
+      lettersFind: [],
+    });
   }
   updateLettersFind(letter) {
     const { lettersFind, finalWord } = this.state;
@@ -88,18 +114,34 @@ class App extends Component {
     const { finalWord, nbTry } = this.state;
     const splitFinalWord = finalWord.split("");
     console.log("ok");
+    const loose = this.loose();
+    const win = this.win();
     return (
       <div>
-        {letters.map((letter, index) => {
-          return (
-            <ButtonLetters
-              letter={letter}
-              onClick={() => this.updateLettersFind(letter)}
-              className="ae"
-              key={index}
-            />
-          );
-        })}
+        {win ? (
+          <ButtonLetters
+            letter="restart"
+            onClick={() => this.restart()}
+            className="test"
+          />
+        ) : loose ? (
+          letters.map((letter, index) => {
+            return (
+              <ButtonLetters
+                letter={letter}
+                onClick={() => this.updateLettersFind(letter)}
+                className="ae"
+                key={index}
+              />
+            );
+          })
+        ) : (
+          <ButtonLetters
+            letter="restart"
+            onClick={() => this.restart()}
+            className="test"
+          />
+        )}
 
         {splitFinalWord.map((elem, index) => {
           return (
@@ -110,7 +152,15 @@ class App extends Component {
           );
         })}
         <p>{nbTry}</p>
-        <p>{nbTry < 9 ? "Partie en cours" : "Perdu"}</p>
+        <p>
+          {loose
+            ? win
+              ? "Gagné !"
+              : "Partie en cours"
+            : `Perdu , le mot était ${finalWord}
+        `}
+        </p>
+        <PrintHanged number={nbTry} />
       </div>
     );
   }
